@@ -102,9 +102,8 @@ func parseGETreq(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-
     http.HandleFunc("/shorten", parsePOSTreq)
     http.HandleFunc("/original", parseGETreq)
-    
+    log.Println ("Listening on port 8082 ...")
     log.Fatal(http.ListenAndServe(":8082", nil))
 }
