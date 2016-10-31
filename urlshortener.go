@@ -4,9 +4,9 @@ import (
     "encoding/json"
     "log"
     "net/http"
-    "strconv"
     "fmt"
     "strings"
+    "github.com/pilu/go-base62"
 )
 
 type postdata_struct struct {
@@ -25,8 +25,8 @@ type get_response_struct struct{
 	Original string	
 }
 
-var urlId int = 124060575
-var urlStore = make(map[int]string)
+var urlId int = 10000
+var urlStore = make(map[string]string)
 
 func parsePOSTreq(rw http.ResponseWriter, req *http.Request) {
     
@@ -44,10 +44,12 @@ func parsePOSTreq(rw http.ResponseWriter, req *http.Request) {
     
     log.Println("Received long URL : "+ pd.LONGURL + " for processing")
 
-	 
-	urlStore[urlId]=pd.LONGURL
+    encodedID := base62.Encode(urlId)
 
-	shortURL := "http://localhost/" + strconv.Itoa(urlId)
+
+	urlStore[encodedID]=pd.LONGURL
+
+	shortURL := "http://localhost/" + encodedID
 
     log.Println("Generated short URL : "+ shortURL)
 
@@ -83,9 +85,7 @@ func parseGETreq(rw http.ResponseWriter, req *http.Request) {
     urlelements := strings.Split(gd.SHORTURL, "/")
     shorturlkey := urlelements[len(urlelements)-1]
 
-    shorturlkeyint,err := strconv.Atoi(shorturlkey)
-
-    originalURL := urlStore[shorturlkeyint]
+    originalURL := urlStore[shorturlkey]
 
     log.Println("Found original URL : "+ originalURL)
 
@@ -100,10 +100,6 @@ func parseGETreq(rw http.ResponseWriter, req *http.Request) {
     }
 
 }
-
-//func shortenIt (longurl string) string {
-//	return shorturl
-//}
 
 func main() {
 
