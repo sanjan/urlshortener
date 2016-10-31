@@ -44,15 +44,13 @@ func parsePOSTreq(rw http.ResponseWriter, req *http.Request) {
     
     log.Println("Received long URL : "+ pd.LONGURL + " for processing")
 
-    encodedID := base62.Encode(urlId)
+    encodedID := base62.Encode(urlId) //using base62 pkg to encode the ID
 
+    urlStore[encodedID]=pd.LONGURL //store the ID,URL combination in a Map for quick look up
 
-	urlStore[encodedID]=pd.LONGURL
-
-	shortURL := "http://localhost/" + encodedID
+    shortURL := "http://localhost/" + encodedID
 
     log.Println("Generated short URL : "+ shortURL)
-
      
     respcontent := post_response_struct{ Short: shortURL}
     
@@ -60,10 +58,9 @@ func parsePOSTreq(rw http.ResponseWriter, req *http.Request) {
     fmt.Fprintf(rw, "HTTP 200\n")
     json.NewEncoder(rw).Encode(&respcontent)
 
-
     defer req.Body.Close()
     
-    urlId++
+    urlId++ //increment Url Id
 }
 
 func parseGETreq(rw http.ResponseWriter, req *http.Request) {
@@ -82,10 +79,11 @@ func parseGETreq(rw http.ResponseWriter, req *http.Request) {
     
     log.Println("Received short URL : "+ gd.SHORTURL + " for processing")
 
+    //find the encoded key by slicing up the URL string by / and finding the last component     
     urlelements := strings.Split(gd.SHORTURL, "/")
     shorturlkey := urlelements[len(urlelements)-1]
 
-    originalURL := urlStore[shorturlkey]
+    originalURL := urlStore[shorturlkey] //retrieve original url from the map
 
     log.Println("Found original URL : "+ originalURL)
 
