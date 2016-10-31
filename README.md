@@ -39,3 +39,7 @@ $ curl -sX GET -H 'Content-Type: application/json' 'localhost:8082/original' -d 
 HTTP 200
 {"Original":"http://a.very.long.url"}
 ```
+
+## Notes
+
+This application is using non-persistent storage to store URL mappings. therefore once the application is stopped. you can no longer retrieve the URLs that were shortened earlier.
