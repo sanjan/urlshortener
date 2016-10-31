@@ -42,4 +42,5 @@ HTTP 200
 
 ## Notes
 
-This application is using non-persistent storage to store URL mappings. therefore once the application is stopped. you can no longer retrieve the URLs that were shortened earlier.
+- This application is using non-persistent storage to store URL mappings. therefore once the application is stopped. you can no longer retrieve the URLs that were shortened earlier.
+- Code is not load tested.
